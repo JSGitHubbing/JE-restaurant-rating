@@ -35,3 +35,24 @@
   text-decoration: none;
   cursor: pointer;
 } 
+
+.je-modal-title {
+	text-align: center;
+}
+
+.je-modal-content {
+	text-align: center;
+}
+
+.je-modal-content input {
+	width: 100px;
+	height: 100px;
+}
+
+.je-manager-button {
+	width: 32px;
+	height: 32px;
+	position:absolute;
+	right:5px;
+	top:5px
+}
