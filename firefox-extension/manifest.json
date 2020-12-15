@@ -11,7 +11,7 @@
     {
       "matches": ["https://www.just-eat.es/area/*"],
       "js": ["src/je-manager.js"],
-	  "css": ["src/modal/modal.css"]
+	    "css": ["src/modal/modal.css"]
     }
   ],
 
@@ -33,6 +33,6 @@
   "browser_action": {
     "default_icon": "icons/stock.png",
     "default_title": "JE Manager",
-    "default_popup": "src/modal/modal1.html"
+    "default_popup": "src/action/action.html"
   }
 } 

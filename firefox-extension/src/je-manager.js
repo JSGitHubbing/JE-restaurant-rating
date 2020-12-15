@@ -19,36 +19,110 @@ function log(msg) {
 	}
 }
 
+function checkUrl() {
+	var url =  window.location.href;
+	var urlFilter = "https:\/\/www.just-eat\..*\/area.*";
+	return url.match(urlFilter) != null;
+}
+
 function modalHTML() {
-	return `
-	<div id="je-modal" class="modal">
-	  <div class="modal-content">
-		<span class="close-je-modal">&times;</span>
-		<h1 id="je-modal-title" class="je-modal-title">Rating</h1>
-		<div class="je-modal-content">
-			<input type='image' id="je-good-valoration" src='` + icons.good + `'">
-			<input type='image' id="je-bad-valoration" src='` + icons.bad + `'">
-		</div>
-	  </div>
-	</div>
-	`;
+
+	var closeX = document.createTextNode("X");
+	var close = document.createElement("span");
+	close.setAttribute("class", "close-je-modal");
+	close.appendChild(closeX);	
+
+	var titleText = document.createTextNode("Rating");
+	var title = document.createElement("h1");
+	title.setAttribute("id","je-modal-title");
+	title.setAttribute("class", "je-modal-title");
+	title.appendChild(titleText);
+
+	var goodValoration = document.createElement("input");
+	goodValoration.setAttribute("id", "je-good-valoration");
+	goodValoration.setAttribute("type", "image");
+	goodValoration.setAttribute("src", icons.good);
+
+	var badValoration = document.createElement("input");
+	badValoration.setAttribute("id", "je-bad-valoration");
+	badValoration.setAttribute("type", "image");
+	badValoration.setAttribute("src", icons.bad);
+
+	var modalbuttons = document.createElement("div");
+	modalbuttons.setAttribute("class", "je-modal-content");
+
+	modalbuttons.appendChild(goodValoration);
+	modalbuttons.appendChild(badValoration);
+
+	var modal = document.createElement("div");
+	modal.setAttribute("class", "modal-content");
+	modal.appendChild(close);
+	modal.appendChild(title);
+	modal.appendChild(modalbuttons);
+
+	var jeModal = document.createElement("div");
+	jeModal.setAttribute("id","je-modal");
+	jeModal.setAttribute("class", "modal");
+
+	jeModal.append(modal);
+
+	return jeModal;
 }
 
 function modal2HTML() {
-	return `
-	<div id="je-modal-2" class="modal">
-	  <div class="modal-content">
-		<h1 id="je-modal-2-title" class="je-modal-title">Reason</h1>
-		<div class="je-modal-content">
-			<input type='image' id="je-bad-reason-1" src='` + icons.bad + `'>Bad place</span>
-			<input type='image' id="je-bad-reason-2" src='` + icons.late + `'>Late delivery</span>
-			<input type='image' id="je-bad-reason-3" src='` + icons.badfood + `'>Bad food</span>
-		</div>
-			<span id="je-bad-reason-0">Skip</span>
-		</div>
-	  </div>
-	</div>
-	`;
+
+	var skipText = document.createTextNode("Skip");
+	var skip = document.createElement("span");
+	skip.setAttribute("id", "je-bad-reason-0");
+	skip.appendChild(skipText);	
+
+	var titleText = document.createTextNode("Reason");
+	var title = document.createElement("h1");
+	title.setAttribute("id","je-modal-2-title");
+	title.setAttribute("class", "je-modal-title");
+	title.appendChild(titleText);
+
+	// Bad place
+	var badPlace = document.createElement("input");
+	badPlace.setAttribute("id", "je-bad-reason-1");
+	badPlace.setAttribute("type", "image");
+	badPlace.setAttribute("src", icons.bad);
+	badPlace.setAttribute("value", "Bad place");
+
+	// Late delivery
+	var lateDelivery = document.createElement("input");
+	lateDelivery.setAttribute("id", "je-bad-reason-2");
+	lateDelivery.setAttribute("type", "image");
+	lateDelivery.setAttribute("src", icons.late);
+
+	// Bad food
+	var badFood = document.createElement("input");
+	badFood.setAttribute("id", "je-bad-reason-3");
+	badFood.setAttribute("type", "image");
+	badFood.setAttribute("src", icons.badfood);
+
+	
+
+	var modalbuttons = document.createElement("div");
+	modalbuttons.setAttribute("class", "je-modal-content");
+
+	modalbuttons.appendChild(badPlace);
+	modalbuttons.appendChild(lateDelivery);
+	modalbuttons.appendChild(badFood);
+
+	var modal = document.createElement("div");
+	modal.setAttribute("class", "modal-content");
+	modal.appendChild(title);
+	modal.appendChild(modalbuttons);
+	modal.appendChild(skip);
+
+	var jeModal2 = document.createElement("div");
+	jeModal2.setAttribute("id","je-modal-2");
+	jeModal2.setAttribute("class", "modal");
+
+	jeModal2.append(modal);
+
+	return jeModal2;
 }
 
 function getIconForReason(reason) {
@@ -119,7 +193,8 @@ function saveRestaurantAndCloseModal(id, color, reason, modal) {
 
 function loadModalWindows() {
 	log("Load modal windows...");
-	document.querySelector("body").innerHTML += modalHTML() + modal2HTML();
+	document.querySelector("body").appendChild(modalHTML());
+	document.querySelector("body").appendChild(modal2HTML());
 	log("...modal windows loaded!");
 }
 
@@ -235,12 +310,7 @@ function loadIcons() {
 */
 
 function mainExtensionFunction() {
-	log(
-	`🇱​​​​​🇴​​​​​🇦​​​​​🇩​​​​​🇮​​​​​🇳​​​​​🇬​​​​​ 🇪​​​​​🇽​​​​​🇹​​​​​🇪​​​​​🇳​​​​​🇸​​​​​🇮​​​​​🇴​​​​​🇳​​​​​
-🇹​​​​​🇭​​​​​🇦​​​​​🇳​​​​​🇰​​​​​🇸​​​​​ 🇫​​​​​🇴​​​​​🇷​​​​​ 🇺​​​​​🇸​​​​​🇮​​​​​🇳​​​​​🇬​​​​​ 🇮​​​​​🇹​​​​​
-`);
 	loadModalWindows();
 	loadIcons();
 }
-
 mainExtensionFunction();
