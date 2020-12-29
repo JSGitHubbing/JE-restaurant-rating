@@ -23,7 +23,4 @@ Este proyecto está bajo la Licencia (GNU GENERAL PUBLIC LICENSE Version 3) - mi
 ## Gracias por vuestro interés 🎁
 
 * Comenta a otros sobre este proyecto 📢
-* Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
-* Da las gracias públicamente 🤓.
-* etc.
 
