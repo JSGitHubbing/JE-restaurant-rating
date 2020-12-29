@@ -1,0 +1,33 @@
+ {
+  "manifest_version": 2,
+  "name": "je-restaurant-manager",
+  "version": "0.1",
+
+  "icons": {
+    "64": "icons/stock.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.just-eat.es/area/*"],
+      "js": ["src/je-manager.js"],
+	    "css": ["src/modal/modal.css"]
+    }
+  ],
+
+  "permissions": ["storage", "webRequest"],
+  "web_accessible_resources": [
+	  "icons/badplace.png",
+	  "icons/stock.png",
+	  "icons/badfood.png",
+	  "icons/latedelivery.png",
+	  "icons/goodplace.png",
+	  "src/modal/modal1.html",
+	  "src/je-manager.js"
+  ],
+  "browser_action": {
+    "default_icon": "icons/stock.png",
+    "default_title": "JE Manager",
+    "default_popup": "src/action/action.html"
+  }
+} 
