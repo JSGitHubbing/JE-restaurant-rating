@@ -11,14 +11,6 @@ icons.badfood = browser.runtime.getURL("icons/badfood.png");
 
 var currentRestaurantId;
 
-var debugging = true;
-
-function log(msg) {
-	if(debugging) {
-		console.log(msg);
-	}
-}
-
 function checkUrl() {
 	var url =  window.location.href;
 	var urlFilter = "https:\/\/www.just-eat\..*\/area.*";
@@ -126,7 +118,6 @@ function modal2HTML() {
 }
 
 function getIconForReason(reason) {
-	log("Image for reason " + reason);
 	var iconUrl = icons.stock;
 	switch(reason) {
 		case 0: 
@@ -145,14 +136,11 @@ function getIconForReason(reason) {
 			iconUrl = icons.stock; 
 
 	}
-	log("is " + iconUrl);
 	return iconUrl;
 }
 
 function updateRestaurantWithData(resData) {
-	log("Res data:\nId: " + resData.id + "\ncolor " + resData.color);
 	var restaurantEntry = document.querySelector("section[data-restaurant-id='"+resData.id+"']");
-	log("Obtaining: " + restaurantEntry);
 	restaurantEntry.style.border = "3px solid " + resData.color;
 	document.getElementById("je-manager-button-" +resData.id).setAttribute("src", getIconForReason(resData.reason));	
 	restaurantEntry.style.opacity = (resData.color == "red") ? 0.6 : 1;
@@ -169,21 +157,24 @@ function saveRestaurantConfiguration(id, color, reason) {
 					}
 				});
 			}
+			
+			var myResData = {};
+			myResData.id = id;
+			myResData.color = color;
+			myResData.reason = reason;
+			
+			loadedData.push(myResData);
+			
+			chrome.storage.sync.set({
+				resdata: loadedData
+			  }, function() {
+				updateRestaurantWithData(myResData);
+			  });
+			
+			
 		});
 		
-		var myResData = {};
-		myResData.id = id;
-		myResData.color = color;
-		myResData.reason = reason;
 		
-		loadedData.push(myResData);
-		
-		log("liked " + id);
-		chrome.storage.local.set({
-			resdata: loadedData
-		  }, function() {
-			updateRestaurantWithData(myResData);
-		  });
 }
 
 function saveRestaurantAndCloseModal(id, color, reason, modal) {
@@ -192,18 +183,14 @@ function saveRestaurantAndCloseModal(id, color, reason, modal) {
 }
 
 function loadModalWindows() {
-	log("Load modal windows...");
 	document.querySelector("body").appendChild(modalHTML());
 	document.querySelector("body").appendChild(modal2HTML());
-	log("...modal windows loaded!");
 }
 
 function modalConfiguration() {
-	log( "Loading config modal..." );
 	var modal = document.getElementById("je-modal");
 	var modal2 = document.getElementById("je-modal-2");
 	
-	log("\tAdding first modal button functions");
 	// START - Button onclick functions
 	var likeButton = document.getElementById("je-good-valoration");
 	likeButton.addEventListener("click", function(){
@@ -218,7 +205,6 @@ function modalConfiguration() {
 	});
 	// END - Button on click functions
 
-	log("\tAdding second modal button functions");
 	// MODAL 2 Buttons
 	var reason0 = document.getElementById("je-bad-reason-0");
 	reason0.addEventListener("click", function(){saveRestaurantAndCloseModal(currentRestaurantId, "red", 0, modal2)});
@@ -229,19 +215,16 @@ function modalConfiguration() {
 	var reason3 = document.getElementById("je-bad-reason-3");
 	reason3.addEventListener("click", function(){saveRestaurantAndCloseModal(currentRestaurantId, "red", 3, modal2)});
 
-	log("\tAdding opening modal functions");
 	// START - OPEN MODAL
 	var jeButtons = document.querySelectorAll("input[id^='je-manager-button-']");
 	jeButtons.forEach(b => 
 		b.onclick = function() {
-			log("Opening modal");
 			modal.style.display = "block";
 			currentRestaurantId = b.getAttribute("restaurant-id");
 		}
 	);	
 	// END - OPEN MODAL
 
-	log("\tAdding close modal button functions");
 	// START - CLOSE MODAL
 	var span = document.getElementsByClassName("close-je-modal")[0];
 	span.onclick = function() {
@@ -258,35 +241,30 @@ function modalConfiguration() {
 	  }
 	}
 	// END - CLOSE MODAL
-	log( "... config modal loaded!" );
 }
 
 function loadStyles() {
-	log( "Loading styles..." );
-	chrome.storage.local.get(null, (res) => {
+	chrome.storage.sync.get(null, (res) => {
 		
-		log("\tLoading restaurant data");
 		if (res.resdata) {
 			res.resdata.forEach(r => {
 				updateRestaurantWithData(r);
 			});
 		} else {
 			var data = [];
-			chrome.storage.local.set({
+			chrome.storage.sync.set({
 				resdata: data
 			  }, function() {
-				log("Restaurant data not found, creating empty values");
+				console.log("Restaurant data not found, creating empty values");
 			});	
 		}
 		
-		log( "... styles loaded!" );
 		modalConfiguration();
 
 	});
 }
 
 function loadIcons() {
-	log( "Loading icons..." );
 	var restaurantList = document.querySelectorAll("section[data-test-id='restaurant'");
 	restaurantList.forEach(restaurant =>  { 
 		var editButton = document.createElement("input");
@@ -301,7 +279,6 @@ function loadIcons() {
 		restaurant.appendChild(editButton);
 
 	}); 
-	log( "... Icons loaded!" );
 	loadStyles();
 }
 
